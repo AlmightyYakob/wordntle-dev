@@ -55,7 +55,7 @@ def main():
     model = build_model(words)
 
     fake_words = set()
-    for i in range(12000):
+    for i in range(15000):
         print("----", i)
         word = generate_word(model, 5, invalid_words=invalid_words)
         if word in invalid_words:
@@ -72,9 +72,14 @@ def main():
         _out.write("\n".join(fake_words))
 
     # Select subset of all fake words as answers and write out
-    answers = random.sample(fake_words, 5000)
+    answers = set(random.sample(fake_words, 3000))
     with open(cwd / "answers.txt", "w") as _out:
         _out.write("\n".join(answers))
+
+    # Select remainder of that set and write out
+    allowed_guesses = fake_words - answers
+    with open(cwd / "allowed_guesses.txt", "w") as _out:
+        _out.write("\n".join(allowed_guesses))
 
 
 if __name__ == "__main__":
