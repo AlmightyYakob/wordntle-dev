@@ -1,4 +1,5 @@
 from __future__ import annotations
+import random
 
 __version__ = "0.1.0"
 
@@ -48,18 +49,13 @@ def generate_word(model: markovify.Text, length: int, invalid_words: Set[str]):
             return word
 
 
-def write_fake_words(words: Set[str]):
-    with open(cwd / "fake_words.txt", "w") as _out:
-        _out.write("\n".join(words))
-
-
 def main():
     words = get_words()
     invalid_words = get_all_words()
     model = build_model(words)
 
     fake_words = set()
-    for i in range(5000):
+    for i in range(12000):
         print("----", i)
         word = generate_word(model, 5, invalid_words=invalid_words)
         if word in invalid_words:
@@ -71,7 +67,14 @@ def main():
         # Don't generate this word again
         invalid_words.add(word)
 
-    write_fake_words(fake_words)
+    # Write total list of fake words
+    with open(cwd / "all_fake_words.txt", "w") as _out:
+        _out.write("\n".join(fake_words))
+
+    # Select subset of all fake words as answers and write out
+    answers = random.sample(fake_words, 5000)
+    with open(cwd / "answers.txt", "w") as _out:
+        _out.write("\n".join(answers))
 
 
 if __name__ == "__main__":
